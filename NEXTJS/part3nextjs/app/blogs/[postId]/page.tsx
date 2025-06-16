@@ -13,7 +13,7 @@ export default async function Blogpage({ params }: any) {
       <div className="">Blog {postId}</div>
       <br></br>
       <div className="">Title {data.title}</div>
-      <div className="">body {data.body}</div>
+      <div className="">body {data.body} Pata nahi yaar</div>
     </>
   );
 }
