@@ -11,6 +11,7 @@ npx create-turbo@latest
 ```
 
 ## What's inside?
+idk what's this 
 
 This Turborepo includes the following packages/apps:
 
