@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./footer": "./src/footer.tsx",
+    "./navbar": "./src/navbar.tsx",
     "./*": "./src/*.tsx"
   },
   "scripts": {
