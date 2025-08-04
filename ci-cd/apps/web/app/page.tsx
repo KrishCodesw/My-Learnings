@@ -6,6 +6,7 @@ export default async function Home() {
     <div>
       {user1?.id}
       {user1?.username}
+      Aur lodo , nahi lagegi tumhari job
     </div>
   );
 }
