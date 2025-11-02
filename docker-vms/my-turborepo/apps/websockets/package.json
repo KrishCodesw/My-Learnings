@@ -1,0 +1,15 @@
+{
+  "name": "websockets",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+	"db": "*"
+},
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

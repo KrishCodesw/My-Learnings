@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+**/bun.lockb
+**/.turbo
+**/dist
+**/build
+**/.env
+.git
+.gitignore
+Docker/*
