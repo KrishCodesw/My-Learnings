@@ -4,16 +4,18 @@ import type { NextFunction } from "express";
 import type { Request,Response } from "express";
 
 
-//Middleware start
+// Manual metric logger Middleware start
 
-function middleware(req:Request,res:Response,next:NextFunction){
+// Problem with the normal middleware that next() middleware immedieatly sends the request to the next request before completing so time will be wrong 
 
-            const startTime=Date.now();
-            next(); 
-            //If there is an async call to db , this will fail as we  did not write //await next()
-            const endTime=Date.now();
-            console.log(`The time this request took is : ${endTime-startTime} ms for method: ${req.method} for route: ${req.route.path}`);
-}
+// function middleware(req:Request,res:Response,next:NextFunction){
+
+//             const startTime=Date.now();
+//             next(); 
+//             //If there is an async call to db , this will fail as we  did not write //await next()
+//             const endTime=Date.now();
+//             console.log(`The time this request took is : ${endTime-startTime} ms for method: ${req.method} for route: ${req.route.path}`);
+// }
 
 // Middleware end
 
@@ -32,16 +34,24 @@ const requestCounter= new promClient.Counter({
 
 function requestCountermiddleware(req:Request,res:Response,next:NextFunction){
         const startTime=Date.now();
+         const routePath = req.route ? req.route.path : req.originalUrl;
+           const statusCode = res.statusCode || 0;
+
+//Calling the Gauge incrementer 
+        activeRequestsGauge.inc({
+            method:req.method,
+            
+        })
+
 
         res.on("finish",()=>{
             const endTime=Date.now();
- const routePath = req.route ? req.route.path : req.originalUrl;
-  const statusCode = res.statusCode || 0;
             requestCounter.inc({
                 method:req.method,
                 route:routePath,
                 status_code:statusCode,
             })
+               activeRequestsGauge.dec();
         })
         next();
 }
@@ -49,7 +59,7 @@ function requestCountermiddleware(req:Request,res:Response,next:NextFunction){
 //expose the metrics endpoint 
 const app =express();
 app.use(json());
-app.use(middleware);
+// app.use(middleware);
 app.use(requestCountermiddleware);
 
 app.get("/metrics",async(req,res)=>{
@@ -61,13 +71,26 @@ app.get("/metrics",async(req,res)=>{
 
 
 
+//Start of making a Gauge 
+
+export const  activeRequestsGauge=new promClient.Gauge({
+    name:'active_requests',
+    help:'Number of active requests',
+    labelNames:['method']
+})
+
+// Adding the Gauge inc and dec functions to the same middleware 
+
+//
+
+
 
 
 
 
 
 app.get("/cpu",(req,res)=>{
-    for(let i=0;i<100000;i++){
+    for(let i=0;i<100000000;i++){
         Math.random();
     }
     res.json({
