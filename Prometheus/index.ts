@@ -27,16 +27,20 @@ const requestCounter= new promClient.Counter({
 
 //adding the custom middleware 
 
+// https://prometheus.io/docs/concepts/metric_types/ THIS ARTICLE WILL HELP
+
+
 function requestCountermiddleware(req:Request,res:Response,next:NextFunction){
         const startTime=Date.now();
 
         res.on("finish",()=>{
             const endTime=Date.now();
-
+ const routePath = req.route ? req.route.path : req.originalUrl;
+  const statusCode = res.statusCode || 0;
             requestCounter.inc({
                 method:req.method,
-                route:req.route?req.route.path:req.path,
-                status_code:req.statusCode,
+                route:routePath,
+                status_code:statusCode,
             })
         })
         next();
