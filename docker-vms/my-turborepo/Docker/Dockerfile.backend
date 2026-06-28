@@ -1,0 +1,38 @@
+FROM oven/bun:1
+
+WORKDIR /usr/src/app 
+
+COPY ./packages ./packages
+
+COPY ./bun.lock ./bun.lock
+
+COPY ./package.json ./package.json
+COPY ./turbo.json ./turbo.json
+
+
+COPY ./apps/backend ./apps/backend
+RUN apt-get update -y && apt-get install -y openssl
+
+RUN bun install
+RUN bun run db:generate
+
+EXPOSE 8000
+
+CMD [ "bun","run","start:backend" ]
+
+# Notes to be taken 
+# When we create a nextjs project , we build the project and it builds some pages statically , which will not be generated again like the landing page. So when we run "bun run start" and then make an entry in the db and the db gets updated , changes wont appear on that frontend as the calls wont go again an this will give us a big error in the ass.
+
+#Solution to this 
+#// export const revalidate = 60 // revalidate every 60 seconds ------>>>>regenerate it every 60 seconds (INCREMENTAL SITE GENERATION)
+# // or
+# // export const dynamic = 'force-dynamic'
+#IF THE BUILD STAGE DOES NOT NEED TO TALK TO THE DATABASE 
+#BUT IF WE NEED TO < WE CAN ADD IT IN THE DOCKERFILE 
+#
+#
+#
+#
+#
+#
+#

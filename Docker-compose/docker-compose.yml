@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=mysecretpass
+    ports:
+      - "5432:5432"
+
+  user:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      network: host
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpass@postgres:5432/postgres
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
