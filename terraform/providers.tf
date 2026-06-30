@@ -23,6 +23,8 @@ terraform {
 
 # }
 
-output "example_output" {
-  value = provider::local::direxists("${path.module}/example-directory")
+output "example_output1" {
+  value     = local_file.server.filename
+  sensitive = true
+  # value = provider::local::direxists("${path.module}/example")
 }
