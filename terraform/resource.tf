@@ -8,6 +8,13 @@ resource "local_file" "tf_ex1" {
   // For every resource - > there are some attributes that are compulsary to be defined 
 }
 
+resource "local_file" "server" {
+  filename = "${local.bas_path}/server.sh"
+  content  = <<EOT
+  environment = ${local.environment}
+  port=3000
+  EOT
+}
 
 //Meta arguements 
 
