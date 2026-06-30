@@ -1,5 +1,8 @@
 # Configuration using provider functions must include required_providers configuration.
 terraform {
+  backend "local" {
+    path = "D:/Code/dev_ops/terraform/terraform/states/terraform.tfstate"
+  }
   required_providers {
     local = {
       source = "hashicorp/local"
